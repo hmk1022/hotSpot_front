@@ -1,29 +1,31 @@
 <template>
   <div class="home">
-   
+    {{this.$store.state}}
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import dotenv from 'dotenv'
+//import axios from "axios";
+import dotenv from "dotenv";
+import {mapMutations} from 'vuex'
+import {mapActions} from 'vuex'
+
+const spotStore = 'spotStore'
 
 export default {
-  name: 'Home',
-  components: { },
+  name: "Home",
+  components: {},
   methods: {
-      getData () {
-          axios.get(`http://api.kcisa.kr/openapi/service/rest/convergence2019/getConver01?serviceKey=${process.env.VUE_APP_SPOT}`).then((res)=>{
-            console.log('광광지 데이터 : ', res);
-          }).catch((err)=> {
-            console.log(err);
-          })
-      },
+    getData() {
+      this.$store.dispatch({type:'getSpots', commit:'SET_SPOTS' , test: 'test'})
+    },
+  ...mapMutations(spotStore, ['spotStore/SET_SPOTS']),
+  ...mapActions(spotStore, ['spotStore/getSpots'])
   },
-  mounted(){
+  
+  mounted() {
     dotenv.config();
     this.getData();
-  }
-  
-}
+  },
+};
 </script>

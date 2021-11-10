@@ -1,12 +1,17 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { spot } from "@/store/spot";
+import { spotStore } from "@/store/spot";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
+  namespaced: false,
   state: {},
   mutations: {},
   actions: {},
-  modules: {},
+  modules: {
+    spotStore: spotStore,
+  },
 });
+
+export default store;
