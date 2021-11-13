@@ -1,9 +1,10 @@
 <template>
   <div class="home"> 
+    <Spinner v-if="isLoading"/>
     <div class="container">
       <div v-for="card in cards" :key="card.rnum">
           <Card v-bind:cardData="card"/>
-      </div> 
+      </div>
     </div>
   </div>
 </template>
@@ -13,16 +14,18 @@
 import dotenv from "dotenv";
 import {mapMutations} from 'vuex'
 import {mapActions} from 'vuex'
+import Spinner from '../components/Spinner.vue'
 import Card from '../components/Card.vue'
 
 const spotStore = 'spotStore'
 
 export default {
   name: "Home",
-  components: { Card },
+  components: { Card , Spinner},
   data () {
     return {
-      cards : this.$store.state.spotStore.spots
+      cards : this.$store.state.spotStore.spots,
+      isLoading: true
     }
   },
   methods: {
@@ -37,30 +40,36 @@ export default {
     dotenv.config();
     this.getData();
   },
+  watch: {
+    cards () {
+      this.isLoading = false;
+    }
+  }
 };
 </script>
 
 <style lang='scss' scoped >
   .home{
     width: 80%;
-    position:absolute;
-    left: 50%;
-    transform: translate(-50%);
+  
   }
 
   .container {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
       display: grid;
       grid-template-columns: 1fr 1fr 1fr 1fr;
       grid-template-rows: auto;
       grid-gap: 10px;
-      width: 90%;    
+      width: 100%;    
       @media (min-width: 1440px) {
-        //grid-template-columns: ${(props) => props.grid};
         grid-gap: 5px;
       }
       @media (max-width: 1440px) {
         /* 1440밑으로 넓이가 내려가면 */
-        margin-top: 4vh;
+        
       }
       /* @media (max-width: 1280px) {
         grid-template-columns: ${(props) => props.grid};
@@ -69,19 +78,13 @@ export default {
         margin-top: 4vh;
         padding-top: 0px;
       } */
-      @media (max-width: 1025px) {
-       
+      @media (max-width: 1025px) {       
         grid-gap: 5px;
-        margin: auto;
-        margin-top: 250px;
-        padding-top: 0px;
+        margin: auto;     
       }
-      @media (max-width: 960px) {
-       
+      @media (max-width: 960px) {    
         grid-gap: 5px;
         margin: auto;
-        margin-top: 250px;
-        padding-top: 0px;
       }
       @media (max-width: 600px) {
         margin-top: 19vh;

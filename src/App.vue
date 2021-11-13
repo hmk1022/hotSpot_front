@@ -29,4 +29,8 @@
     }
   }
 }
+
+.hidden {
+  display: none;
+}
 </style>
