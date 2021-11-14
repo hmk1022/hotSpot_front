@@ -1,5 +1,5 @@
 <template>
-<div class="card-container" @mouseenter="mouseOver" @mouseleave ="mouseOver">  
+<div class="card-container"  v-on:click="goUrl(cardData.url)" @mouseenter="mouseOver" @mouseleave ="mouseOver">  
       <div class="card">
           <img class="card-img" :src="cardData.referenceIdentifier" alt=""> 
           <span class="hover" v-if="isHover">
@@ -22,7 +22,10 @@ export default {
         mouseOver (){
           //console.log('마우스');
           this.isHover = !this.isHover
-        } 
+        },
+        goUrl (url){
+          window.location.href = url;
+        }
     },
     mounted() {
       //console.log('렌더링');

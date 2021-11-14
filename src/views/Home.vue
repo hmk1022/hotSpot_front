@@ -6,6 +6,7 @@
           <Card v-bind:cardData="card"/>
       </div>
     </div>
+     <infinite-loading @infinite="infiniteHandler" spinner="Spinner"></infinite-loading>
   </div>
 </template>
 
@@ -16,21 +17,24 @@ import {mapMutations} from 'vuex'
 import {mapActions} from 'vuex'
 import Spinner from '../components/Spinner.vue'
 import Card from '../components/Card.vue'
+import InfiniteLoading from "vue-infinite-loading";
 
 const spotStore = 'spotStore'
 
 export default {
   name: "Home",
-  components: { Card , Spinner},
+  components: { Card , Spinner , InfiniteLoading },
   data () {
     return {
       cards : this.$store.state.spotStore.spots,
-      isLoading: true
+      isLoading: true,
+      pageNo: 2,
     }
   },
   methods: {
-    getData() {
-      this.$store.dispatch({type:'getSpots', commit:'SET_SPOTS' , test: 'test'})
+    infiniteHandler() {
+      this.$store.dispatch({type:'getSpots', commit:'SET_SPOTS' ,numOfRows: 16 , pageNo: 1 ,test: 'test'})
+      this.pageNo++
     },
   ...mapMutations(spotStore, ['spotStore/SET_SPOTS']),
   ...mapActions(spotStore, ['spotStore/getSpots'])
@@ -38,7 +42,7 @@ export default {
   
   mounted() {
     dotenv.config();
-    this.getData();
+    this.infiniteHandler();
   },
   watch: {
     cards () {
@@ -55,22 +59,23 @@ export default {
   }
 
   .container {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      grid-template-rows: auto;
-      grid-gap: 10px;
-      width: 100%;    
-      @media (min-width: 1440px) {
-        grid-gap: 5px;
-      }
-      @media (max-width: 1440px) {
+    margin: auto;
+    display: grid;
+    position:absolute;
+    left: 50%;
+    margin-top: 30px;
+    transform: translate(-50%);
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto;
+    grid-gap: 10px;
+    width: 100%;    
+    @media (min-width: 1440px) {
+       grid-gap: 5px;
+    }
+    @media (max-width: 1440px) {
         /* 1440밑으로 넓이가 내려가면 */
         
-      }
+    }
       /* @media (max-width: 1280px) {
         grid-template-columns: ${(props) => props.grid};
         grid-gap: 10px;
@@ -78,18 +83,17 @@ export default {
         margin-top: 4vh;
         padding-top: 0px;
       } */
-      @media (max-width: 1025px) {       
-        grid-gap: 5px;
-        margin: auto;     
-      }
-      @media (max-width: 960px) {    
-        grid-gap: 5px;
-        margin: auto;
-      }
-      @media (max-width: 600px) {
-        margin-top: 19vh;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-gap: 2px;
-      }
+    @media (max-width: 1025px) {       
+      grid-gap: 5px;
+      margin: auto;     
+    }
+    @media (max-width: 960px) {    
+      grid-gap: 5px;
+      margin: auto;
+    }
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-gap: 2px;
+    }
   }
 </style>
