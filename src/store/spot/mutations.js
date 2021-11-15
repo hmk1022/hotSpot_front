@@ -7,5 +7,6 @@ export const mutations = {
     for (let i = 0; i < payload.length; i++) {
       state.spots.push(payload[i]);
     }
+    //console.log("상태", state.spots);
   },
 };

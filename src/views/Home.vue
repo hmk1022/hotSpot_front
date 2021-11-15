@@ -1,21 +1,20 @@
 <template>
-  <div class="home"> 
-    <Spinner v-if="isLoading"/>
+  <div> 
+    <!-- <Spinner v-if="isLoading"/> -->
     <div class="container">
-      <div v-for="card in cards" :key="card.rnum">
+      <div v-for="card in Posts" :key="card.url">
           <Card v-bind:cardData="card"/>
       </div>
     </div>
-     <infinite-loading @infinite="infiniteHandler" spinner="Spinner"></infinite-loading>
+  <infinite-loading @infinite="infiniteHandler" >무한스크롤 끄읏 :)</infinite-loading>
   </div>
 </template>
 
 <script>
-//import axios from "axios";
-import dotenv from "dotenv";
+import axios from "axios";
 import {mapMutations} from 'vuex'
 import {mapActions} from 'vuex'
-import Spinner from '../components/Spinner.vue'
+//import Spinner from '../components/Spinner.vue'
 import Card from '../components/Card.vue'
 import InfiniteLoading from "vue-infinite-loading";
 
@@ -23,26 +22,47 @@ const spotStore = 'spotStore'
 
 export default {
   name: "Home",
-  components: { Card , Spinner , InfiniteLoading },
+  components: { Card  , InfiniteLoading },
   data () {
     return {
       cards : this.$store.state.spotStore.spots,
       isLoading: true,
-      pageNo: 2,
+      pageNo: 1,
+      Posts : []
     }
   },
   methods: {
-    infiniteHandler() {
-      this.$store.dispatch({type:'getSpots', commit:'SET_SPOTS' ,numOfRows: 16 , pageNo: 1 ,test: 'test'})
-      this.pageNo++
+    infiniteHandler($state) {
+      console.log('무한스크롤');
+      axios
+      .get(
+        `http://api.kcisa.kr/openapi/service/rest/convergence2019/getConver01?serviceKey=${process.env.VUE_APP_SPOT}&pageNo=${this.pageNo}&numOfRows=16`
+      )
+      .then((res) => {
+        console.log('처음 res : ', res);
+        let data = res.data.response.body.items.item;
+        console.log('data',data)
+        for (let i = 0; i < data.length; i++){
+           this.Posts.push(data[i]);
+        }
+        this.pageNo++
+        $state.loaded();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+      // this.$store.dispatch({type:'getSpots', commit:'SET_SPOTS' ,numOfRows:12 , pageNo: 1 ,test: 'test'})
+      // this.pageNo = this.pageNo + 2;
+      // console.log('pageNo : ', this.pageNo)
     },
   ...mapMutations(spotStore, ['spotStore/SET_SPOTS']),
   ...mapActions(spotStore, ['spotStore/getSpots'])
   },
   
   mounted() {
-    dotenv.config();
-    this.infiniteHandler();
+    //dotenv.config();
+    //this.infiniteHandler();
   },
   watch: {
     cards () {
@@ -53,18 +73,11 @@ export default {
 </script>
 
 <style lang='scss' scoped >
-  .home{
-    width: 80%;
-  
-  }
+ 
 
   .container {
-    margin: auto;
+    padding-top: 50px;
     display: grid;
-    position:absolute;
-    left: 50%;
-    margin-top: 30px;
-    transform: translate(-50%);
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: auto;
     grid-gap: 10px;
@@ -87,7 +100,8 @@ export default {
       grid-gap: 5px;
       margin: auto;     
     }
-    @media (max-width: 960px) {    
+    @media (max-width: 960px) {   
+     grid-template-columns: 1fr 1fr 1fr; 
       grid-gap: 5px;
       margin: auto;
     }
