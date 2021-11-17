@@ -1,21 +1,26 @@
 <template>
-<div class="card-container"  v-on:click="goUrl(cardData.url)" @mouseenter="mouseOver" @mouseleave ="mouseOver">  
+<div class="card-container"  v-on:click="search(cardData.title)" @mouseenter="mouseOver" @mouseleave ="mouseOver">  
       <div class="card">
           <img class="card-img" :src="cardData.referenceIdentifier" alt=""> 
           <span class="hover" v-if="isHover">
-            <div class="hover-font">{{cardData.title}}</div>
+            <div class="hover-font" >{{cardData.title}}</div>
           </span> 
       </div>
 </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     name:'Card',
-    props: ['cardData'],
+    props: {
+      cardData: Object
+    },
     data () {
        return {
          isHover : false,
+         searchContent : ""
        } 
     },
     methods : {
@@ -25,6 +30,12 @@ export default {
         },
         goUrl (url){
           window.location.href = url;
+        },
+        search (searchUrl){
+          console.log('검색어 : ', searchUrl)
+          axios.get(`http://localhost:8000/search/url=${searchUrl}`).then((res) =>{
+            console.log("검색결과 : ",res);
+          })
         }
     },
     mounted() {

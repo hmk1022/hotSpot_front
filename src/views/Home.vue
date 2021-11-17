@@ -6,7 +6,7 @@
           <Card v-bind:cardData="card"/>
       </div>
     </div>
-  <infinite-loading @infinite="infiniteHandler" >무한스크롤 끄읏 :)</infinite-loading>
+  <infinite-loading @infinite="infiniteHandler" spinner="waveDots">무한스크롤 끄읏 :)</infinite-loading>
   </div>
 </template>
 
@@ -33,15 +33,14 @@ export default {
   },
   methods: {
     infiniteHandler($state) {
-      console.log('무한스크롤');
       axios
       .get(
         `http://api.kcisa.kr/openapi/service/rest/convergence2019/getConver01?serviceKey=${process.env.VUE_APP_SPOT}&pageNo=${this.pageNo}&numOfRows=16`
       )
       .then((res) => {
-        console.log('처음 res : ', res);
+        //console.log('처음 res : ', res);
         let data = res.data.response.body.items.item;
-        console.log('data',data)
+        //console.log('data',data)
         for (let i = 0; i < data.length; i++){
            this.Posts.push(data[i]);
         }
@@ -51,24 +50,20 @@ export default {
       .catch((err) => {
         console.log(err);
       });
-
-      // this.$store.dispatch({type:'getSpots', commit:'SET_SPOTS' ,numOfRows:12 , pageNo: 1 ,test: 'test'})
-      // this.pageNo = this.pageNo + 2;
-      // console.log('pageNo : ', this.pageNo)
+    },
+    test () {
+      axios
+      .get(`http://localhost:8000/search`).then((res)=> {
+        console.log('테스트 : ', res)
+      })
     },
   ...mapMutations(spotStore, ['spotStore/SET_SPOTS']),
   ...mapActions(spotStore, ['spotStore/getSpots'])
   },
   
   mounted() {
-    //dotenv.config();
-    //this.infiniteHandler();
+    this.test()
   },
-  watch: {
-    cards () {
-      this.isLoading = false;
-    }
-  }
 };
 </script>
 
