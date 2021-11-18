@@ -32,8 +32,13 @@ export default {
           window.location.href = url;
         },
         search (searchUrl){
+          let regex = /[^0-9]/gi;
+          console.log('검색어1 : ', searchUrl)
+          let replaceSearch =searchUrl.replace(regex,"");
+
           console.log('검색어 : ', searchUrl)
-          axios.get(`http://localhost:8000/search/url=${searchUrl}`).then((res) =>{
+          //searchUrl = searchUrl.replace(/[/)  
+          axios.post(`http://localhost:8000/search/url=${replaceSearch}`).then((res) =>{
             console.log("검색결과 : ",res);
           })
         }
