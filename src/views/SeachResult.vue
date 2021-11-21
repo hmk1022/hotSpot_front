@@ -1,12 +1,13 @@
 <template>
-  
+  <ResultCard/>
 </template>
 
 <script>
-
+import ResultCard from '../components/ResultCard.vue'
 
 export default {
-    name: "SearchResult"
+    name: "SearchResult",
+    components: {ResultCard}
 }
 </script>
 

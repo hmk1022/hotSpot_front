@@ -14,6 +14,7 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(NavPlugin);
 Vue.use(InfiniteLoading);
+Vue.use(global);
 
 new Vue({
   router,

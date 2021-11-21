@@ -1,8 +1,8 @@
 <template>
   <div> 
     <!-- <Spinner v-if="isLoading"/> -->
-    <div class="container">
-      <div v-for="card in Posts" :key="card.url">
+    <div class="container"> 
+      <div v-for="card in Posts" :key="card.url" >
           <Card v-bind:cardData="card"/>
       </div>
     </div>
@@ -52,6 +52,7 @@ export default {
       });
     },
     test () {
+      console.log('검색시작');
       axios
       .get(`http://localhost:8000/search`).then((res)=> {
         console.log('테스트 : ', res)

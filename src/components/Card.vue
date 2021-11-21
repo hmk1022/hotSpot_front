@@ -1,11 +1,14 @@
 <template>
 <div class="card-container"  v-on:click="search(cardData.title)" @mouseenter="mouseOver" @mouseleave ="mouseOver">  
-      <div class="card">
-          <img class="card-img" :src="cardData.referenceIdentifier" alt=""> 
-          <span class="hover" v-if="isHover">
-            <div class="hover-font" >{{cardData.title}}</div>
-          </span> 
-      </div>
+      <router-link to="/searchResult">
+        <div class="card">
+          
+            <img class="card-img" :src="cardData.referenceIdentifier" alt=""> 
+            <span class="hover" v-if="isHover">
+              <div class="hover-font" >{{cardData.title}}</div>
+            </span> 
+        </div>
+      </router-link>
 </div>
 </template>
 
@@ -35,13 +38,13 @@ export default {
           let regex = /[^0-9]/gi;
           console.log('검색어1 : ', searchUrl)
           let replaceSearch =searchUrl.replace(regex,"");
-
-          console.log('검색어 : ', searchUrl)
-          //searchUrl = searchUrl.replace(/[/)  
           axios.post(`http://localhost:8000/search/url=${replaceSearch}`).then((res) =>{
             console.log("검색결과 : ",res);
+            //this.ruter.push('searchResult')
+          }).catch((err)=>{
+            console.log('에러 : ',err)
           })
-        }
+        },
     },
     mounted() {
       //console.log('렌더링');
