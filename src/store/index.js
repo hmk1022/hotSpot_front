@@ -6,7 +6,7 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   namespaced: false,
-  state: {},
+  state: { test: "test" },
   mutations: {},
   actions: {},
   modules: {

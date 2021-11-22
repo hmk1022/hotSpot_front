@@ -14,6 +14,7 @@
 
 <script>
 import axios from 'axios'
+import { mapMutations } from 'vuex';
 
 export default {
     name:'Card',
@@ -37,15 +38,19 @@ export default {
         search (searchUrl){
           let regex = /[^0-9]/gi;
           console.log('검색어1 : ', searchUrl)
-          let replaceSearch =searchUrl.replace(regex,"");
+          let replaceSearch = searchUrl.replace(regex,"");
           axios.post(`http://localhost:8000/search/url=${replaceSearch}`).then((res) =>{
+            
             console.log("검색결과 : ",res);
-            //this.ruter.push('searchResult')
+            this.$store.commit('SET_SEARCH_RESULT', res);
           }).catch((err)=>{
             console.log('에러 : ',err)
           })
         },
     },
+    ...mapMutations([
+        'SET_SEARCH_RESULT'
+    ]),
     mounted() {
       //console.log('렌더링');
     },
