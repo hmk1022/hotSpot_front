@@ -5,7 +5,7 @@
           
             <img class="card-img" :src="cardData.referenceIdentifier" alt=""> 
             <span class="hover" v-if="isHover">
-              <div class="hover-font" >{{cardData.title}}</div>
+              <div class="hover-font" >{{cardData.title}}<br><br>{{cardData.readyContent}}</div>
             </span> 
         </div>
       </router-link>
@@ -14,7 +14,7 @@
 
 <script>
 import axios from 'axios'
-import { mapMutations } from 'vuex';
+//import { mapMutations } from 'vuex';
 
 export default {
     name:'Card',
@@ -40,20 +40,13 @@ export default {
           console.log('검색어1 : ', searchUrl)
           let replaceSearch = searchUrl.replace(regex,"");
           axios.post(`http://localhost:8000/search/url=${replaceSearch}`).then((res) =>{
-            
-            console.log("검색결과 : ",res);
             this.$store.commit('SET_SEARCH_RESULT', res);
           }).catch((err)=>{
             console.log('에러 : ',err)
           })
         },
     },
-    ...mapMutations([
-        'SET_SEARCH_RESULT'
-    ]),
-    mounted() {
-      //console.log('렌더링');
-    },
+
 }
 </script>
 

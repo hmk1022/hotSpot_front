@@ -3,10 +3,8 @@
     <div class="container"> 
       <div v-for="data in searchData" :key="data.bloggerlink" >
           <Card v-bind:cardData="data"/>
-          <img :src="data.link"/>
       </div>
     </div>
-    {{this.searchData}}
   </div>
 </template>
 

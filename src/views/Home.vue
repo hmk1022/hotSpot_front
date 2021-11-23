@@ -1,8 +1,8 @@
 <template>
-  <div> 
-    <!-- <Spinner v-if="isLoading"/> -->
+  <div>
+    <ScrollTop /> 
     <div class="container"> 
-      <div v-for="card in Posts" :key="card.url" >
+      <div v-for="card in spots" :key="card.url" >
           <Card v-bind:cardData="card"/>
       </div>
     </div>
@@ -12,17 +12,14 @@
 
 <script>
 import axios from "axios";
-import {mapMutations} from 'vuex'
-import {mapActions} from 'vuex'
-//import Spinner from '../components/Spinner.vue'
+import {mapState} from 'vuex'
 import Card from '../components/Card.vue'
 import InfiniteLoading from "vue-infinite-loading";
-
-const spotStore = 'spotStore'
+import ScrollTop from '../components/ScrollTop.vue'
 
 export default {
   name: "Home",
-  components: { Card  , InfiniteLoading },
+  components: { Card  , InfiniteLoading, ScrollTop },
   data () {
     return {
       cards : this.$store.state.spotStore.spots,
@@ -38,12 +35,9 @@ export default {
         `http://api.kcisa.kr/openapi/service/rest/convergence2019/getConver01?serviceKey=${process.env.VUE_APP_SPOT}&pageNo=${this.pageNo}&numOfRows=16`
       )
       .then((res) => {
-        //console.log('처음 res : ', res);
-        let data = res.data.response.body.items.item;
-        //console.log('data',data)
-        for (let i = 0; i < data.length; i++){
-           this.Posts.push(data[i]);
-        }
+        console.log('?',res); 
+       
+        this.$store.commit('SET_SPOTS', res.data.response);
         this.pageNo++
         $state.loaded();
       })
@@ -51,19 +45,13 @@ export default {
         console.log(err);
       });
     },
-    test () {
-      console.log('검색시작');
-      axios
-      .get(`http://localhost:8000/search`).then((res)=> {
-        console.log('테스트 : ', res)
-      })
-    },
-  ...mapMutations(spotStore, ['spotStore/SET_SPOTS']),
-  ...mapActions(spotStore, ['spotStore/getSpots'])
   },
-  
+  computed : {
+    ...mapState({
+        spots : state => state.spotStore.spots
+    })     
+  },
   mounted() {
-    this.test()
   },
 };
 </script>
