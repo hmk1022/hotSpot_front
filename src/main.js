@@ -4,7 +4,13 @@ import router from "./router";
 import store from "./store";
 import InfiniteLoading from "vue-infinite-loading";
 import "mdb-vue-ui-kit/css/mdb.min.css";
-import { BootstrapVue, IconsPlugin, NavPlugin } from "bootstrap-vue";
+import {
+  BootstrapVue,
+  IconsPlugin,
+  NavPlugin,
+  BIcon,
+  BIconArrowUp,
+} from "bootstrap-vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import "mdb-vue-ui-kit/css/mdb.min.css";
@@ -15,6 +21,8 @@ Vue.use(IconsPlugin);
 Vue.use(NavPlugin);
 Vue.use(InfiniteLoading);
 Vue.use(global);
+Vue.component("BIcon", BIcon);
+Vue.component("BIconArrowUp", BIconArrowUp);
 
 new Vue({
   router,

@@ -1,5 +1,6 @@
 <template>
-<div class="card-container"  v-on:click="search(cardData.title)" @mouseenter="mouseOver" @mouseleave ="mouseOver">  
+<!-- search(cardData.title) -->
+<div class="card-container"  v-on:click="align()" @mouseenter="mouseOver" @mouseleave ="mouseOver">  
       <router-link to="/searchResult">
         <div class="card">
             <img class="card-img" :src="cardData.referenceIdentifier" alt=""> 
@@ -13,6 +14,7 @@
 
 <script>
 import axios from 'axios'
+import $ from 'jquery'
 //import { mapMutations } from 'vuex';
 
 export default {
@@ -43,6 +45,35 @@ export default {
           }).catch((err)=>{
             console.log('에러 : ',err)
           })
+        },
+        createThumb (_thumbUrl){
+          let img = document.createElement('IMG');
+          let thumbUrl = _thumbUrl.replace(/[^:]*:\/\/([^:\/]*)(:{0,1}\/{1}.*)/, '$1');
+          img.src = 'http://msnsearch.srv.girafa.com/srv/i?s=MSNSEARCH&r='+ thumbUrl;
+          img.className = 'linkThumb';
+          img.alt = thumbUrl;
+          img.style.display = 'none';
+          return img
+        },
+
+
+        align (array){
+          
+          let thisUrl = document.domain;
+          console.log('thisUrl1 : ',thisUrl)
+          if(thisUrl.split('.')[0] == 'www'){
+            thisUrl = thisUrl.substring(4, thisUrl.length);
+          }
+          
+          $(array).each((element)=> {
+            var url = element.href;
+            if(url.indexOf(thisUrl) == -1) {
+              let img = this.createThumb(url)
+              console.log(img)
+            }
+          })
+
+
         },
     },
 

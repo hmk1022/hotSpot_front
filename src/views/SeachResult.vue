@@ -2,19 +2,20 @@
   <div>
     <div class="container"> 
       <div v-for="data in searchData" :key="data.bloggerlink" >
-          <Card v-bind:cardData="data"/>
+          <!-- <a :href="data.bloggerlink">dd</a> -->
+          <BlogCard v-bind:cardData="data"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Card from '../components/Card.vue'
+import BlogCard from '../components/BlogCard.vue'
 import { mapState } from 'vuex'
 
 export default {
     name: "SearchResult",
-    components: { Card } ,
+    components: { BlogCard } ,
     data  () {
       return {
        
