@@ -1,11 +1,12 @@
 <template>
 <!-- search(cardData.title) -->
-<div class="card-container"  v-on:click="align()" @mouseenter="mouseOver" @mouseleave ="mouseOver">  
+<div class="card-container"  v-on:click="urlifyAndDisplayTitle(cardData.bloggerlink)" @mouseenter="mouseOver" @mouseleave ="mouseOver">  
       <router-link to="/searchResult">
         <div class="card">
             <img class="card-img" :src="cardData.referenceIdentifier" alt=""> 
             <span class="hover" v-if="isHover">
               <div class="hover-font" >{{cardData.title}}<br><br>{{cardData.readyContent}}</div>
+              <div id="test">또순이네</div>
             </span> 
         </div>
       </router-link>
@@ -46,35 +47,51 @@ export default {
             console.log('에러 : ',err)
           })
         },
-        createThumb (_thumbUrl){
-          let img = document.createElement('IMG');
-          let thumbUrl = _thumbUrl.replace(/[^:]*:\/\/([^:\/]*)(:{0,1}\/{1}.*)/, '$1');
-          img.src = 'http://msnsearch.srv.girafa.com/srv/i?s=MSNSEARCH&r='+ thumbUrl;
-          img.className = 'linkThumb';
-          img.alt = thumbUrl;
-          img.style.display = 'none';
-          return img
-        },
 
-
-        align (array){
-          
-          let thisUrl = document.domain;
-          console.log('thisUrl1 : ',thisUrl)
-          if(thisUrl.split('.')[0] == 'www'){
-            thisUrl = thisUrl.substring(4, thisUrl.length);
-          }
-          
-          $(array).each((element)=> {
-            var url = element.href;
-            if(url.indexOf(thisUrl) == -1) {
-              let img = this.createThumb(url)
-              console.log(img)
-            }
+        getThumb (url){
+          console.log('클릭 url :',url)
+          axios.post( "http://api.linkpreview.net", {q:url, key:'123456'}).then((res)=>{
+            console.log('섬네일 가져오기',res)
+          }).catch((err)=> {
+            console.log(err)
           })
-
-
         },
+
+         getTitle(externalUrl){
+          //document.getElementById("test").innerHTML += "<bR>in title";
+          $.ajax({
+            url: "https://crossorigin.me/"+externalUrl,
+            success: function(data) {
+              document.getElementById("test").innerHTML += "success";
+              var matches = data.match(/<title>(.*?)<\/title>/);
+              //alert(match[1]);
+              return(matches[1]);
+            },
+            error: function(e) {
+              document.getElementById("test").innerHTML += "error";
+              alert("error! " + e);
+            }
+          });
+        },
+
+        urlify(text) {
+          var urlRegex = /(https?:\/\/[^\s]+)/g;
+          return text.match(urlRegex);
+        },
+        urlifyAndDisplayTitle(_url){
+          var text = _url
+          
+          //document.getElementById("test").innerHTML += "found text <br>";
+          var url = this.urlify(text);
+          //document.getElementById("test").innerHTML += "found url " + url;
+          var title = this.getTitle(url);
+          console.log(title)
+          //document.getElementById("test").innerHTML = "<br>found title" + title;
+          //var newText = text.replace(url,title);
+          //document.getElementById("url").innerHTML = newText;
+        }
+
+        
     },
 
 }
