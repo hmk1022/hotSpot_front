@@ -1,12 +1,11 @@
 <template>
 <!-- search(cardData.title) -->
-<div class="card-container"  v-on:click="urlifyAndDisplayTitle(cardData.bloggerlink)" @mouseenter="mouseOver" @mouseleave ="mouseOver">  
+<div class="card-container"  @mouseenter="mouseOver" @mouseleave ="mouseOver">  
       <router-link to="/searchResult">
-        <div class="card">
+        <div class="card" >
             <img class="card-img" :src="cardData.referenceIdentifier" alt=""> 
             <span class="hover" v-if="isHover">
               <div class="hover-font" >{{cardData.title}}<br><br>{{cardData.readyContent}}</div>
-              <div id="test">또순이네</div>
             </span> 
         </div>
       </router-link>
@@ -15,8 +14,9 @@
 
 <script>
 import axios from 'axios'
+//import cheerio from 'cheerio'
 import $ from 'jquery'
-//import { mapMutations } from 'vuex';
+
 
 export default {
     name:'Card',
@@ -26,7 +26,8 @@ export default {
     data () {
        return {
          isHover : false,
-         searchContent : ""
+         searchContent : "",
+         jquery: $ 
        } 
     },
     methods : {
@@ -47,51 +48,76 @@ export default {
             console.log('에러 : ',err)
           })
         },
-
-        getThumb (url){
-          console.log('클릭 url :',url)
-          axios.post( "http://api.linkpreview.net", {q:url, key:'123456'}).then((res)=>{
-            console.log('섬네일 가져오기',res)
-          }).catch((err)=> {
-            console.log(err)
-          })
+        getThumbnail(){
+          var metaTags = document.querySelectorAll('meta');
+          console.log('metaTags : ',metaTags)
         },
-
-         getTitle(externalUrl){
-          //document.getElementById("test").innerHTML += "<bR>in title";
-          $.ajax({
-            url: "https://crossorigin.me/"+externalUrl,
-            success: function(data) {
-              document.getElementById("test").innerHTML += "success";
-              var matches = data.match(/<title>(.*?)<\/title>/);
-              //alert(match[1]);
-              return(matches[1]);
-            },
-            error: function(e) {
-              document.getElementById("test").innerHTML += "error";
-              alert("error! " + e);
+        _getHostname(url) {
+          let start = url.indexOf('://') + 3
+          let end = url.indexOf('/', start)
+          return url.slice(start, end)
+        },
+        _getProtocol(url) {
+          let end = url.indexOf('://') + 3
+          return url.slice(0, end)
+        },
+        _bodyScrap(url) {
+          return ($) => {
+            // 글제목
+            let title = $('meta[property=\'og:title\']').attr('content')
+            if(!title){
+              title = $('head title').text()
+              if(!title){
+                throw Error('This link has no title')
+              }
             }
-          });
-        },
+            // 글이미지
+            let image = $('meta[property=\'og:image\']').attr('content')
+            if(!image){
+              image = $('img').attr('src')
+              //이미지 세팅
+              if(image && image.indexOf('http') === 0){
+                // http 로 시작하면 그냥 사용
+              }else if(image && image[0] === '/'){
+                // image 경로가 / 로 시작한다면
+                //let urlObj = new URL(url);
+                image = this._getProtocol(url) + this._getHostname(url) + image
+              }else{
+                image = ''
+              }
+            }
 
-        urlify(text) {
-          var urlRegex = /(https?:\/\/[^\s]+)/g;
-          return text.match(urlRegex);
+            // 글요약본
+            let desc = $('meta[property=\'og:description\']').attr('content')
+            if(!desc){
+              desc = ''
+            }
+            return {
+              title,
+              image,
+              desc,
+            }
+          }
         },
-        urlifyAndDisplayTitle(_url){
-          var text = _url
-          
-          //document.getElementById("test").innerHTML += "found text <br>";
-          var url = this.urlify(text);
-          //document.getElementById("test").innerHTML += "found url " + url;
-          var title = this.getTitle(url);
-          console.log(title)
-          //document.getElementById("test").innerHTML = "<br>found title" + title;
-          //var newText = text.replace(url,title);
-          //document.getElementById("url").innerHTML = newText;
-        }
-
-        
+        // async getUrlMeta(url){
+         
+        //   // eslint-disable-next-line no-debugger
+        //   const meta = await fetch(url ,{
+        //     method: "POST",
+        //     headers :{
+        //       "Content-Type": "text/plain",
+        //       'Access-Control-Allow-Origin': '*'
+        //     }
+        //   })
+        //     .then((res) => res.text())
+        //     .then(cheerio.load)
+        //     .then(this._bodyScrap(url))
+        //     .catch(rejected => {
+        //         console.log(rejected);
+        //     });
+        //   return meta
+        // },
+      
     },
 
 }
