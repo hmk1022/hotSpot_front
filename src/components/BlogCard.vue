@@ -3,7 +3,8 @@
 <div class="card-container"  @mouseenter="mouseOver" @mouseleave ="mouseOver">  
       <router-link to="/searchResult">
         <div class="card" >
-            <img class="card-img" :src="cardData.referenceIdentifier" alt=""> 
+            <img class="card-img" :src="cardData.thumb" alt=""> 
+            <img src = "https://blogthumb.pstatic.net/MjAyMDA2MzBfMTU2/MDAxNTkzNTE3MjU5MTYy.wVF2LQiz7kQyUu3rLwCnezJ2ll6lewECvN2Fz1JUpdog.k61PlDNyhdaJUpEE38w-_pgrj_kDMRnhNdhrahZBuasg.JPEG.tryukjin/%3FURL_%B4%DC%C3%E0_%B8%B5%C5%A9%C1%D9%C0%CC%B1%E2_%BA%F1%C6%B2%B8%AE%BF%CD_%C7%CF%B3%AA_%B4%F5_%BC%D2%B0%B3%C7%D8_%BA%BD._%281%29.jpg?type=w2">
             <span class="hover" v-if="isHover">
               <div class="hover-font" >{{cardData.title}}<br><br>{{cardData.readyContent}}</div>
             </span> 
@@ -43,6 +44,7 @@ export default {
           console.log('검색어1 : ', searchUrl)
           let replaceSearch = searchUrl.replace(regex,"");
           axios.post(`http://localhost:8000/search/url=${replaceSearch}`).then((res) =>{
+            console.log('타이틀 검색:',res)
             this.$store.commit('SET_SEARCH_RESULT', res);
           }).catch((err)=>{
             console.log('에러 : ',err)

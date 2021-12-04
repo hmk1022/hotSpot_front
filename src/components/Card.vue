@@ -39,6 +39,7 @@ export default {
           console.log('검색어1 : ', searchUrl)
           let replaceSearch = searchUrl.replace(regex,"");
           axios.post(`http://localhost:8000/search/url=${replaceSearch}`).then((res) =>{
+            console.log('블로그 검색결과 : ',res)
             this.$store.commit('SET_SEARCH_RESULT', res);
           }).catch((err)=>{
             console.log('에러 : ',err)
