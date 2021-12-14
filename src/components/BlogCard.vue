@@ -4,7 +4,7 @@
       <router-link to="/searchResult">
         <div class="card" >
             <img class="card-img" :src="cardData.thumb" alt=""> 
-            <img src = "https://blogthumb.pstatic.net/MjAyMDA2MzBfMTU2/MDAxNTkzNTE3MjU5MTYy.wVF2LQiz7kQyUu3rLwCnezJ2ll6lewECvN2Fz1JUpdog.k61PlDNyhdaJUpEE38w-_pgrj_kDMRnhNdhrahZBuasg.JPEG.tryukjin/%3FURL_%B4%DC%C3%E0_%B8%B5%C5%A9%C1%D9%C0%CC%B1%E2_%BA%F1%C6%B2%B8%AE%BF%CD_%C7%CF%B3%AA_%B4%F5_%BC%D2%B0%B3%C7%D8_%BA%BD._%281%29.jpg?type=w2">
+          
             <span class="hover" v-if="isHover">
               <div class="hover-font" >{{cardData.title}}<br><br>{{cardData.readyContent}}</div>
             </span> 
