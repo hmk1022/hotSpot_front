@@ -1,5 +1,5 @@
 <template>
-  <div class="form-container">
+  <div class="login-form-container">
     <b-form @submit="onSubmit" @reset="onReset" v-if="show">
       <b-form-group
         id="input-group-1"
@@ -86,13 +86,13 @@ import axios from "axios";
   }
 </script>
 
-<style lang="scss" scoped>
-    .form-container {
+<style>
+    .login-form-container {
         width: 80%;
         position: absolute;
         top: 20%;
         left: 50%;
-        transform: translate(-50%,)
+        transform: translate(-50%)
 
     }
     

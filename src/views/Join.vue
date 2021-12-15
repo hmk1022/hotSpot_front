@@ -124,13 +124,13 @@ import axios from "axios";
   }
 </script>
 
-<style lang="scss" scoped>
+<style >
     .form-container {
         width: 80%;
         position: absolute;
         top: 20%;
         left: 50%;
-        transform: translate(-50%,)
+        transform: translate(-50%)
 
     }
     

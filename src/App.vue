@@ -22,7 +22,7 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style >
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap');
 
 #app {
